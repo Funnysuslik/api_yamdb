@@ -2,12 +2,22 @@ from django.db import models
 
 
 class Review(models.Model):
+    author = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
         related_name='reviews'
     )
     text = models.TextField()
+    created = models.DateTimeField(
+        'Creation date',
+        auto_now_add=True,
+        db_index=True
+    )
 
     class Meta:
 
@@ -19,10 +29,10 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
-    title = models.ForeignKey(
-        Title,
+    author = models.ForeignKey(
+        CustomUser,
         on_delete=models.CASCADE,
-        related_name='comments',
+        related_name='comments'
     )
     review = models.ForeignKey(
         Review,
@@ -30,6 +40,11 @@ class Comment(models.Model):
         related_name='comments'
     )
     text = models.TextField
+    created = models.DateTimeField(
+        'Creation date',
+        auto_now_add=True,
+        db_index=True
+    )
 
     class Meta:
 
