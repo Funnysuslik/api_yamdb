@@ -1,4 +1,13 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+class CustomUser(AbstractUser):
+    """not done yet"""
+    somefield = models.TextField(
+        'some description',
+        blank=True,
+    )
 
 
 class Review(models.Model):
