@@ -26,6 +26,7 @@ comment_detail = CommentsViewSet.as_view({
 })
 
 urlpatterns = [
+    
     path('v1/titles/<int:title_id>/reviews/', review_list, name='review-list'),
     path('v1/titles/<int:title_id>/reviews/<int:review_id>/', review_detail, name='review-detail'),
     path('v1/titles/<int:title_id>/reviews/<int:review_id>/comments', comment_list, name='comment-list'),
