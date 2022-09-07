@@ -94,9 +94,7 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name='reviews'
     )
-    text = models.TextField(
-        blank=False
-    )
+    text = models.TextField()
     score = models.PositiveSmallIntegerField(
         'Rating',
         validators=[
@@ -132,9 +130,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    text = models.TextField(
-        blank=False
-    )
+    text = models.TextField()
     pub_date = models.DateTimeField(
         'Creation date',
         auto_now_add=True,

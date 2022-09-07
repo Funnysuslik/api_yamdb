@@ -11,6 +11,7 @@ from .permissions import IsAuthorOrModeratorOrReadOnly
 
 class ReviewsViewSet(viewsets.ModelViewSet):
     """Viewset for reviews model."""
+
     queryset = Review.objects.all()
     serializer_class = ReviewsSerializer
     permission_classes = [IsAuthorOrModeratorOrReadOnly]
@@ -21,6 +22,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 
 class CommentsViewSet(viewsets.ModelViewSet):
     """Viewset for reviews model."""
+
     queryset = Comment.objects.all()
     serializer_class = CommentsSerializer
     permission_classes = [IsAuthorOrModeratorOrReadOnly]
