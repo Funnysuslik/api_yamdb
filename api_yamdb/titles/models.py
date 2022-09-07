@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator  # , MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -82,6 +82,8 @@ class Title(models.Model):
 
 
 class Review(models.Model):
+    """DB model for reviews."""
+
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -93,7 +95,14 @@ class Review(models.Model):
         related_name='reviews'
     )
     text = models.TextField()
-    created = models.DateTimeField(
+    score = models.PositiveSmallIntegerField(
+        'Rating',
+        validators=[
+            MinValueValidator(1, 'Minimum value - 1'),
+            MaxValueValidator(10, 'maximum value - 10')
+        ]
+    )
+    pub_date = models.DateTimeField(
         'Creation date',
         auto_now_add=True,
         db_index=True
@@ -109,6 +118,8 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
+    """DB model for comments."""
+
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -119,8 +130,8 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    text = models.TextField
-    created = models.DateTimeField(
+    text = models.TextField()
+    pub_date = models.DateTimeField(
         'Creation date',
         auto_now_add=True,
         db_index=True
@@ -133,69 +144,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text[:10]
-
-
-
-
-"""
-class Review(models.Model):
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name='ID отзыва',
-    )
-    text = models.TextField(
-        'Текст отзыва',
-        blank=False,
-    )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name='Username пользователя'
-    )
-    score = models.PositiveSmallIntegerField(
-        'Оценка',
-        validators=[
-            MinValueValidator(1, 'Минимальная оценка - 1'),
-            MaxValueValidator(10, 'Максимальная оценка - 10')
-        ]
-    )
-    pub_date = models.DateTimeField(
-        'Дата публикации отзыва',
-        auto_now_add=True,
-    )
-
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-
-
-class Comment(models.Model):
-    review = models.ForeignKey(
-        Review,
-        on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='ID комментария'
-    )
-    text = models.TextField(
-        'Текст комментария',
-        blank=False,
-    )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='Username автора комметария'
-    )
-    pub_date = models.DateTimeField(
-        'Дата публикации комментария',
-        auto_now_add=True,
-    )
-
-    class Meta:
-        verbose_name = 'Комментарий'
-        verbose_name_plural = 'Комментарии'
-
-"""
