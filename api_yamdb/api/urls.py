@@ -1,34 +1,21 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-from .views import ReviewsViewSet, CommentsViewSet
+from .views import CommentsViewSet, ReviewsViewSet
 
-
-review_list = ReviewsViewSet.as_view({
-    'get': 'list',
-    'post': 'create',
-})
-
-review_detail = ReviewsViewSet.as_view({
-    'get': 'retrieve',
-    'patch': 'partial_update',
-    'delete': 'destroy',
-})
-
-comment_list = CommentsViewSet.as_view({
-    'get': 'list',
-    'post': 'create',
-})
-
-comment_detail = CommentsViewSet.as_view({
-    'get': 'retrieve',
-    'patch': 'partial_update',
-    'delete': 'destroy',
-})
+router_v1 = DefaultRouter()
+router_v1.register(
+    r'titles/(?P<title_id>\d+/reviews/',
+    ReviewsViewSet,
+    basename='reviews'
+)
+router_v1.register(
+    r'titles/(?P<title_id>\d+/reviews/(?P<review_id>\d+/comments/',
+    CommentsViewSet,
+    basename='comments'
+)
 
 urlpatterns = [
-    
-    path('v1/titles/<int:title_id>/reviews/', review_list, name='review-list'),
-    path('v1/titles/<int:title_id>/reviews/<int:review_id>/', review_detail, name='review-detail'),
-    path('v1/titles/<int:title_id>/reviews/<int:review_id>/comments', comment_list, name='comment-list'),
-    path('v1/titles/<int:title_id>/reviews/<int:review_id>/comments/<int:comment_id>', comment_detail, name='comment-detail'),
+
+    path('v1/', include(router_v1.urls)),
 ]
