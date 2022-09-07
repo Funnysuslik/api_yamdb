@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from users.views import APISignUp, APIUser
 from .views import CommentsViewSet, ReviewsViewSet
 
 router_v1 = DefaultRouter()
@@ -16,6 +17,8 @@ router_v1.register(
 )
 
 urlpatterns = [
+    path('v1/auth/', include('users.urls')),
+    path('v1/users/me/', APIUser.as_view(), name='me'),
 
     path('v1/', include(router_v1.urls)),
 ]

@@ -1,15 +1,8 @@
-from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
-
-class CustomUser(AbstractUser):
-    """not done yet"""
-    somefield = models.TextField(
-        'some description',
-        blank=True,
-    )
+from users.models import User
 
 
 class NameSlug(models.Model):
@@ -85,7 +78,7 @@ class Review(models.Model):
     """DB model for reviews."""
 
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='comments'
     )
@@ -121,7 +114,7 @@ class Comment(models.Model):
     """DB model for comments."""
 
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='comments'
     )
