@@ -1,12 +1,21 @@
 """Views."""
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework import mixins
 
+<<<<<<< HEAD
 
 from titles.models import Comment, Review, Review, Title
 from .serializers import CommentsSerializer, ReviewsSerializer
 #from .permissions import IsAuthorOrModeratorOrReadOnly
 
+=======
+from titles.models import Comment, Review
+from .serializers import CommentsSerializer, ReviewsSerializer
+#from .permissions import IsAuthorOrModeratorOrReadOnly
+>>>>>>> 427b804 (server started)
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
@@ -26,7 +35,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 
 class CommentsViewSet(viewsets.ModelViewSet):
     """Viewset for comments model."""
-    
+
     serializer_class = CommentsSerializer
     #permission_classes = [IsAuthorOrModeratorOrReadOnly]
 
