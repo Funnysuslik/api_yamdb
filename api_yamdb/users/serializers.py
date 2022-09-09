@@ -1,9 +1,9 @@
 from rest_framework import exceptions, serializers
 from rest_framework.validators import UniqueValidator
 
-from yatube_api.settings import (MESSAGE_FOR_RESERVED_NAME,
-                                 MESSAGE_FOR_USER_NOT_FOUND,
-                                 RESERVED_NAME)
+from api_yamdb.settings import (MESSAGE_FOR_RESERVED_NAME,
+                                MESSAGE_FOR_USER_NOT_FOUND,
+                                RESERVED_NAME)
 
 from .models import User
 
