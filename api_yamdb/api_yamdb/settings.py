@@ -132,4 +132,4 @@ MESSAGE_FOR_RESERVED_NAME = 'Имя пользователя "me" использ
 MESSAGE_FOR_USER_NOT_FOUND = 'Пользователя с таким именем нет!'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-FROM_DEFAULT_EMAIL = 'webmaster@localhost'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
