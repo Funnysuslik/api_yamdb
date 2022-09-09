@@ -98,7 +98,6 @@ class Review(models.Model):
     pub_date = models.DateTimeField(
         'Creation date',
         auto_now_add=True,
-        db_index=True
     )
 
     class Meta:
@@ -127,7 +126,6 @@ class Comment(models.Model):
     pub_date = models.DateTimeField(
         'Creation date',
         auto_now_add=True,
-        db_index=True
     )
 
     class Meta:
