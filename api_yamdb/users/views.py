@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import AccessToken
 
-from api_yamdb.settings import DEFAULT_FROM_EMAIL
+from api_yamdb.settings import FROM_DEFAULT_EMAIL
 from users.permissions import IsAdmin
 from users.serializers import (ForAdminSerializer, ForUserSerializer,
                                TokenSerializer)
@@ -24,7 +24,7 @@ def create_confirmation_code_and_send_email(username):
         # delete user.username after debag
         subject=f'{user.username} Confirmation code',
         message=f'Your confirmation code {confirmation_code}',
-        from_email=DEFAULT_FROM_EMAIL,
+        from_email=FROM_DEFAULT_EMAIL,
         recipient_list=[user.email, ])
 
 
