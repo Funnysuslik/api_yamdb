@@ -6,7 +6,7 @@ from rest_framework import mixins
 
 from titles.models import Comment, Review
 from .serializers import CommentsSerializer, ReviewsSerializer
-from .permissions import IsAuthorOrModeratorOrReadOnly
+#from .permissions import IsAuthorOrModeratorOrReadOnly
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
@@ -14,7 +14,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 
     queryset = Review.objects.all()
     serializer_class = ReviewsSerializer
-    permission_classes = [IsAuthorOrModeratorOrReadOnly]
+#    permission_classes = [IsAuthorOrModeratorOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -25,7 +25,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
 
     queryset = Comment.objects.all()
     serializer_class = CommentsSerializer
-    permission_classes = [IsAuthorOrModeratorOrReadOnly]
+#    permission_classes = [IsAuthorOrModeratorOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
