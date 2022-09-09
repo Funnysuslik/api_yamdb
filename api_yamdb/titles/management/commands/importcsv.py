@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from titles.models import (
     Category,
     Comment,
-    CustomUser,
+    User,
     Genre,
     GenreTitle,
     Review,
@@ -27,7 +27,7 @@ class Command(BaseCommand):
         print("Loading childrens data")
 
         for row in DictReader(open('.static/data/user.csv')):
-            user = CustomUser(
+            user = User(
                 pk=row['id'],
                 username=row['username'],
                 email=row['email'],
@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 pk=row['id'],
                 title=Title.objects.filter(pk=row['title_id']),
                 text=row['text'],
-                author=CustomUser.objects.filter(pk=row['author']),
+                author=User.objects.filter(pk=row['author']),
                 score=row['score'],
                 pub_date=row['pub_date']
             )
@@ -96,7 +96,7 @@ class Command(BaseCommand):
 
         for row in DictReader(open('.static/data/comment.csv')):
             comment = Comment(
-                author=CustomUser.objects.filter(pk=row['author']),
+                author=User.objects.filter(pk=row['author']),
                 review=Review.objects.filter(pk=row['review_id']),
                 text=row['text'],
                 pub_date=row['pub_date']
