@@ -7,10 +7,11 @@ from titles.models import Comment, Review
 class CommentsSerializer(serializers.ModelSerializer):
     """Serializer for comment db model."""
 
+
     class Meta:
         """Filler."""
 
-        fields = '__all__'
+        fields = ('text',)
         model = Comment
 
 
@@ -20,6 +21,6 @@ class ReviewsSerializer(serializers.ModelSerializer):
     class Meta:
         """Filler."""
 
-        fields = '__all__'
+        fields = ('text', 'score')
         model = Review
         

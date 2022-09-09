@@ -6,14 +6,12 @@ from .views import CommentsViewSet, ReviewsViewSet
 
 router_v1 = DefaultRouter()
 router_v1.register(
-    # r'titles/(?P<title_id>\d+/reviews/',
-    'titles/1/reviews/',
+    r'titles/(?P<title_id>\d+)/reviews/',
     ReviewsViewSet,
     basename='reviews'
 )
 router_v1.register(
-    # r'titles/(?P<title_id>\d+/reviews/(?P<review_id>\d+/comments/',
-    'titles/1/reviews/1/comments/',
+    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments/',
     CommentsViewSet,
     basename='comments'
 )
