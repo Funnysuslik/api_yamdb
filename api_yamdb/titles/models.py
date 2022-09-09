@@ -80,7 +80,7 @@ class Review(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='comments'
+        related_name='reviews'
     )
     title = models.ForeignKey(
         Title,
