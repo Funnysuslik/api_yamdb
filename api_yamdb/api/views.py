@@ -16,15 +16,25 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewsSerializer
     permission_classes = [IsAuthorOrModeratorOrReadOnly]
 
+    def get_queryset(self):
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+
+        return title.reviews.all()
+
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
 
 class CommentsViewSet(viewsets.ModelViewSet):
-    """Viewset for reviews model."""
+    """Viewset for comments model."""
     
     serializer_class = CommentsSerializer
     permission_classes = [IsAuthorOrModeratorOrReadOnly]
+
+    def get_queryset(self):
+        review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
+
+        return review.comments.all()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
