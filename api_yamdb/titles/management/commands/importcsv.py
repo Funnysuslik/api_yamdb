@@ -22,12 +22,13 @@ class Command(BaseCommand):
         + ' title.csv and user.csv'
     )
 
-    def import_csv(self, file):
+    def handle(self, *args, **option):
         """Filler."""
-        print("Loading childrens data")
+        print("Loading DB data")
 
-        for row in DictReader(open('.static/data/user.csv')):
-            user = User(
+        for row in DictReader(open('./static/data/users.csv')):
+            print(row)
+            user = User.objects.get_or_create(
                 pk=row['id'],
                 username=row['username'],
                 email=row['email'],
@@ -36,53 +37,54 @@ class Command(BaseCommand):
                 first_name=row['first_name'],
                 last_name=row['last_name']
             )
-            user.save()
+            print(user)
 
         print('Users done..')
 
-        for row in DictReader(open('.static/data/category.csv')):
-            category = Category(
+        for row in DictReader(open('./static/data/category.csv')):
+            print(row)
+            category = Category.objects.get_or_create(
                 pk=row['id'],
                 name=row['name'],
                 slug=row['slug']
             )
-            category.save()
+            print(category)
 
         print('Categories done..')
 
-        for row in DictReader(open('.static/data/genre.csv')):
-            genre = Genre(
+        for row in DictReader(open('./static/data/genre.csv')):
+            genre = Genre.objects.get_or_create(
                 pk=row['id'],
                 name=row['name'],
                 slug=row['slug']
             )
-            genre.save()
+            print(genre)
 
         print('Genres done..')
 
-        for row in DictReader(open('.static/data/title.csv')):
-            title = Title(
+        for row in DictReader(open('./static/data/title.csv')):
+            title = Title.objects.get_or_create(
                 pk=row['id'],
                 name=row['name'],
                 year=row['year'],
                 category=Category.objects.filter(pk=row['category'])
             )
-            title.save()
+            print(title)
 
         print('Tiltes done..')
 
-        for row in DictReader(open('.static/data/genre_title.csv')):
-            genre_title = GenreTitle(
+        for row in DictReader(open('./static/data/genre_title.csv')):
+            genre_title = GenreTitle.objects.get_or_create(
                 pk=row['id'],
                 genre=Genre.objects.filter(pk=row['genre_id']),
                 title=Title.objects.filter(pk=row['title_id'])
             )
-            genre_title.save()
+            print(genre_title)
 
         print('Genres of titles done..')
 
-        for row in DictReader(open('.static/data/review.csv')):
-            review = Review(
+        for row in DictReader(open('./static/data/review.csv')):
+            review = Review.objects.get_or_create(
                 pk=row['id'],
                 title=Title.objects.filter(pk=row['title_id']),
                 text=row['text'],
@@ -90,18 +92,18 @@ class Command(BaseCommand):
                 score=row['score'],
                 pub_date=row['pub_date']
             )
-            review.save()
+            print(review)
 
         print('Reviews done..')
 
-        for row in DictReader(open('.static/data/comment.csv')):
-            comment = Comment(
+        for row in DictReader(open('./static/data/comment.csv')):
+            comment = Comment.objects.get_or_create(
                 author=User.objects.filter(pk=row['author']),
                 review=Review.objects.filter(pk=row['review_id']),
                 text=row['text'],
                 pub_date=row['pub_date']
             )
-            comment.save()
+            print(comment)
 
         print('Comments done..')
         print('DB filled')
