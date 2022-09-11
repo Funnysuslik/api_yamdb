@@ -1,4 +1,5 @@
 """Serializers."""
+from django.db.models import Avg
 from rest_framework import serializers
 
 from titles.models import Comment, Review
@@ -22,5 +23,4 @@ class ReviewsSerializer(serializers.ModelSerializer):
         """Filler."""
 
         fields = ('text', 'score')
-        model = Review
-        
+        model = Review        
