@@ -18,6 +18,9 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    def __str__(self):
+        return self.name[:10]
+
 
 class Genre(models.Model):
     """DB model for genres"""
@@ -31,6 +34,9 @@ class Genre(models.Model):
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
+
+    def __str__(self):
+        return self.name[:10]
 
 
 def year():
@@ -64,7 +70,8 @@ class Title(models.Model):
         Genre,
         verbose_name='Жанр',
         related_name='titles',
-        blank=True
+        blank=True,
+        through='GenreTitle'
     )
     category = models.ForeignKey(
         Category,
@@ -77,6 +84,27 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
+
+    def __str__(self):
+        return self.name[:10]
+
+
+class GenreTitle(models.Model):
+    """DB model for many to many relation for Genre and Title models"""
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE,
+        related_name='genretitles'
+    )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='genretitles'
+    )
+
+    class Meta:
+        verbose_name = 'ganretitle'
+        verbose_name_plural = 'ganretitles'
 
 
 class Review(models.Model):
