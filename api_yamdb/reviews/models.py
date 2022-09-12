@@ -1,3 +1,6 @@
+from django.db import models
+
+# Create your models here.
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -5,25 +8,29 @@ from django.utils import timezone
 from users.models import User
 
 
-class NameSlug(models.Model):
+class Category(models.Model):
+    """DB model for categories"""
     name = models.CharField(
-        verbose_name='Наименование',
-        max_length=256
+        max_length=254,   
     )
-    slug = models.SlugField(
-        verbose_name='Идентификатор',
-        max_length=50,
-        unique=True
+    slug = models.CharField(
+        max_length=50
     )
 
-
-class Category(NameSlug):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
 
-class Genre(NameSlug):
+class Genre(models.Model):
+    """DB model for genres"""
+    name = models.CharField(
+        max_length=254,   
+    )
+    slug = models.CharField(
+        max_length=50
+    )
+
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
@@ -74,6 +81,24 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
 
 
+class GenreTitle(models.Model):
+    """DB model for many to many relation for Genre and Title models"""
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE,
+        related_name='genretitles'
+    )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='genretitles'
+    )
+
+    class Meta:
+        verbose_name = 'ganretitle'
+        verbose_name_plural = 'ganretitles'
+
+
 class Review(models.Model):
     """DB model for reviews."""
 
@@ -98,7 +123,6 @@ class Review(models.Model):
     pub_date = models.DateTimeField(
         'Creation date',
         auto_now_add=True,
-        db_index=True
     )
 
     class Meta:
@@ -116,18 +140,17 @@ class Comment(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        # related_name='comments'
+        related_name='comments'
     )
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
-        # related_name='comments'
+        related_name='comments'
     )
     text = models.TextField()
     pub_date = models.DateTimeField(
         'Creation date',
         auto_now_add=True,
-        db_index=True
     )
 
     class Meta:

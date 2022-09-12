@@ -5,9 +5,13 @@ from rest_framework.pagination import LimitOffsetPagination
 # from rest_framework.pagination import LimitOffsetPagination
 # from rest_framework import mixins
 
-from titles.models import Comment, Review
-from .serializers import CommentsSerializer, ReviewsSerializer
+
+from reviews.models import Comment, Review, Review, Title
 #from .permissions import IsAuthorOrModeratorOrReadOnly
+from .serializers import (
+    CommentsSerializer,
+    ReviewsSerializer,
+)
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
