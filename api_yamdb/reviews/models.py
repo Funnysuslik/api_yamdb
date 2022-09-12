@@ -1,6 +1,3 @@
-from django.db import models
-
-# Create your models here.
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -11,7 +8,7 @@ from users.models import User
 class Category(models.Model):
     """DB model for categories"""
     name = models.CharField(
-        max_length=254,   
+        max_length=254,
     )
     slug = models.CharField(
         max_length=50
@@ -25,7 +22,7 @@ class Category(models.Model):
 class Genre(models.Model):
     """DB model for genres"""
     name = models.CharField(
-        max_length=254,   
+        max_length=254,
     )
     slug = models.CharField(
         max_length=50
@@ -67,6 +64,8 @@ class Title(models.Model):
         Genre,
         verbose_name='Жанр',
         related_name='titles',
+        null=True,
+        blank=True
     )
     category = models.ForeignKey(
         Category,
@@ -81,22 +80,22 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
 
 
-class GenreTitle(models.Model):
-    """DB model for many to many relation for Genre and Title models"""
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE,
-        related_name='genretitles'
-    )
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='genretitles'
-    )
+# class GenreTitle(models.Model):
+#     """DB model for many to many relation for Genre and Title models"""
+#     genre = models.ForeignKey(
+#         Genre,
+#         on_delete=models.CASCADE,
+#         related_name='genretitles'
+#     )
+#     title = models.ForeignKey(
+#         Title,
+#         on_delete=models.CASCADE,
+#         related_name='genretitles'
+#     )
 
-    class Meta:
-        verbose_name = 'ganretitle'
-        verbose_name_plural = 'ganretitles'
+#     class Meta:
+#         verbose_name = 'ganretitle'
+#         verbose_name_plural = 'ganretitles'
 
 
 class Review(models.Model):
