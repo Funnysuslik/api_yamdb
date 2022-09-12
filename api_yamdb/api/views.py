@@ -6,20 +6,26 @@ from rest_framework.pagination import LimitOffsetPagination
 # from rest_framework import mixins
 
 
-from reviews.models import Comment, Review, Review, Title
-#from .permissions import IsAuthorOrModeratorOrReadOnly
+from reviews.models import Review, Title
+from users.permissions import IsAuthorOrAdministratorOrReadOnly
 from .serializers import (
+    CategoriesSerializer,
     CommentsSerializer,
     ReviewsSerializer,
 )
 
 
+class CategoriesViewSet(viewsets.ModelViewSet):
+    """Viewset for reviews model."""
+
+    serializer_class = CategoriesSerializer
+
+
 class ReviewsViewSet(viewsets.ModelViewSet):
     """Viewset for reviews model."""
 
-    queryset = Review.objects.all()
     serializer_class = ReviewsSerializer
-    #permission_classes = [IsAuthorOrModeratorOrReadOnly]
+    permission_classes = [IsAuthorOrAdministratorOrReadOnly]
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -33,9 +39,9 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 
 class CommentsViewSet(viewsets.ModelViewSet):
     """Viewset for comments model."""
-    
+
     serializer_class = CommentsSerializer
-    #permission_classes = [IsAuthorOrModeratorOrReadOnly]
+    permission_classes = [IsAuthorOrAdministratorOrReadOnly]
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
