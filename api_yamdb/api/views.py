@@ -1,10 +1,12 @@
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from titles.models import Category, Comment, Genre, Review, Title
 
+from .filters import TitleFilter
 from .permissions import IsAdminOrReadOnly, IsAuthorOrModeratorOrReadOnly
 from .serializers import CategorySerializer, CommentsSerializer, GenreSerializer, ReviewsSerializer, \
     TitleGetSerializer, TitlePostSerializer
@@ -59,8 +61,10 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     permission_classes = (IsAuthenticatedOrReadOnly, IsAdminOrReadOnly,)
     paginathion_class = (LimitOffsetPagination,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TitleFilter
 
     def get_serializer_class(self):
-        if self.action in ('list', 'retrieve'):
+        if self.action in ('list', 'retrieve',):
             return TitleGetSerializer
         return TitlePostSerializer
