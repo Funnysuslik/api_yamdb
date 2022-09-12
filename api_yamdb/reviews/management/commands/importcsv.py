@@ -8,6 +8,7 @@ from reviews.models import (
     Genre,
     Review,
     Title,
+    GenreTitle
 )
 from users.models import User
 
@@ -69,26 +70,26 @@ class Command(BaseCommand):
                 year=row['year'],
                 category=Category.objects.get(pk=row['category'])
             )
-            title = Title.objects.get(pk=row['id'])
-            for rows in DictReader(open('./static/data/genre_title.csv')):
-                if rows['title_id'] == row['id']:
-                    title.genre.get_or_create(
-                        name=Genre.objects.get(pk=rows['genre_id'])
-                    )
+#            title = Title.objects.get(pk=row['id'])
+#            for rows in DictReader(open('./static/data/genre_title.csv')):
+#                if rows['title_id'] == row['id']:
+#                    title.genre.get_or_create(
+#                        name=Genre.objects.get(pk=rows['genre_id'])
+#                    )
 
             print(title)
 
         print('Tiltes done..')
 
-        # for row in DictReader(open('./static/data/genre_title.csv')):
-        #     genre_title = GenreTitle.objects.get_or_create(
-        #         pk=row['id'],
-        #         genre=Genre.objects.filter(pk=row['genre_id']),
-        #         title=Title.objects.filter(pk=row['title_id'])
-        #     )
-        #     print(genre_title)
+        for row in DictReader(open('./static/data/genre_title.csv')):
+            genre_title = GenreTitle.objects.get_or_create(
+                pk=row['id'],
+                genre=Genre.objects.get(pk=row['genre_id']),
+                title=Title.objects.get(pk=row['title_id'])
+            )
+            print(genre_title)
 
-        # print('Genres of titles done..')
+        print('Genres of titles done..')
 
         for row in DictReader(open(
             './static/data/review.csv',
