@@ -1,7 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
-
 from users.models import User
 
 
@@ -137,3 +136,63 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text[:10]
+
+# Еще один вариант моделей. 
+# author, text, pub_date вынесены в отдельный класс.
+"""
+class ReviewComment(models.Model):
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    text = models.TextField()
+    pub_date = models.DateTimeField(
+        'Creation date',
+        auto_now_add=True,
+        db_index=True
+    )
+
+
+class Review(ReviewComment):
+    """DB model for reviews."""
+
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    score = models.PositiveSmallIntegerField(
+        'Rating',
+        validators=[
+            MinValueValidator(1, 'Minimum value - 1'),
+            MaxValueValidator(10, 'maximum value - 10')
+        ]
+    )
+
+    class Meta:
+
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"
+
+    def __str__(self):
+        return self.text[:10]
+
+
+class Comment(ReviewComment):
+    """DB model for comments."""
+
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+
+    class Meta:
+
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
+
+    def __str__(self):
+        return self.text[:10]
+"""
