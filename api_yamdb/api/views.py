@@ -6,7 +6,7 @@ from rest_framework.pagination import LimitOffsetPagination
 # from rest_framework import mixins
 
 
-from titles.models import Comment, Review, Review, Title
+from reviews.models import Comment, Review, Review, Title
 #from .permissions import IsAuthorOrModeratorOrReadOnly
 from .serializers import (
     CommentsSerializer,

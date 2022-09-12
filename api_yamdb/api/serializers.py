@@ -2,7 +2,7 @@
 from django.db.models import Avg
 from rest_framework import serializers
 
-from titles.models import Comment, Review
+from reviews.models import Comment, Review
 
 
 class CommentsSerializer(serializers.ModelSerializer):

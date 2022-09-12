@@ -2,15 +2,15 @@
 from csv import DictReader
 from django.core.management.base import BaseCommand
 
-from titles.models import (
+from reviews.models import (
     Category,
     Comment,
-    User,
     Genre,
     GenreTitle,
     Review,
     Title,
 )
+from users.models import User
 
 
 class Command(BaseCommand):
@@ -62,7 +62,7 @@ class Command(BaseCommand):
 
         print('Genres done..')
 
-        for row in DictReader(open('./static/data/title.csv')):
+        for row in DictReader(open('./static/data/titles.csv')):
             title = Title.objects.get_or_create(
                 pk=row['id'],
                 name=row['name'],
