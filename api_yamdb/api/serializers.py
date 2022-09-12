@@ -17,6 +17,7 @@ class ReviewsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Review
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
