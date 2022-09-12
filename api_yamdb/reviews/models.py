@@ -64,7 +64,6 @@ class Title(models.Model):
         Genre,
         verbose_name='Жанр',
         related_name='titles',
-        null=True,
         blank=True
     )
     category = models.ForeignKey(
@@ -78,24 +77,6 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
-
-
-# class GenreTitle(models.Model):
-#     """DB model for many to many relation for Genre and Title models"""
-#     genre = models.ForeignKey(
-#         Genre,
-#         on_delete=models.CASCADE,
-#         related_name='genretitles'
-#     )
-#     title = models.ForeignKey(
-#         Title,
-#         on_delete=models.CASCADE,
-#         related_name='genretitles'
-#     )
-
-#     class Meta:
-#         verbose_name = 'ganretitle'
-#         verbose_name_plural = 'ganretitles'
 
 
 class Review(models.Model):
