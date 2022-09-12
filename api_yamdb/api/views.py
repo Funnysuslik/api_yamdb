@@ -1,12 +1,13 @@
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import IsAuthenticated
-from titles.models import Category, Comment, Genre, Review
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from titles.models import Category, Comment, Genre, Review, Title
 
 from .permissions import IsAdminOrReadOnly, IsAuthorOrModeratorOrReadOnly
-from .serializers import (CategorySerializer, CommentsSerializer,
-                          GenreSerializer, ReviewsSerializer)
+from .serializers import CategorySerializer, CommentsSerializer, GenreSerializer, ReviewsSerializer, \
+    TitleGetSerializer, TitlePostSerializer
 
 
 class ReviewsViewSet(viewsets.ModelViewSet):
@@ -37,7 +38,7 @@ class GenCatMix(mixins.ListModelMixin, mixins.CreateModelMixin,
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', )
     lookup_field = 'slug'
-    pagination_class = LimitOffsetPagination
+    pagination_class = (LimitOffsetPagination,)
 
 
 class GenreViewSet(GenCatMix):
@@ -52,3 +53,14 @@ class CategoryViewSet(GenCatMix):
     Добавление и удаление категорий доступно только админу."""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAdminOrReadOnly,)
+    paginathion_class = (LimitOffsetPagination,)
+
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return TitleGetSerializer
+        return TitlePostSerializer
