@@ -66,7 +66,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     """Viewset for reviews model."""
 
     serializer_class = ReviewSerializer
-    # permission_classes = [IsAuthorOrAdministratorOrReadOnly]
+    permission_classes = [IsAuthorOrAdministratorOrReadOnly]
     # pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -101,7 +101,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
     """Viewset for comments model."""
 
     serializer_class = CommentSerializer
-    # permission_classes = [IsAuthorOrAdministratorOrReadOnly]
+    permission_classes = [IsAuthorOrAdministratorOrReadOnly]
     # pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
