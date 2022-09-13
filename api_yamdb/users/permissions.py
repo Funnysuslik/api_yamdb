@@ -12,7 +12,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 
 class IsAdmin(permissions.BasePermission):
-    """Доступ только администратору"""
 
     def has_permission(self, request, view):
         return (request.user.is_authenticated
@@ -20,6 +19,7 @@ class IsAdmin(permissions.BasePermission):
 
 
 class IsAuthorOrAdministratorOrReadOnly(permissions.BasePermission):
+
     def has_permission(self, request, view):
         return (
             request.method in permissions.SAFE_METHODS
