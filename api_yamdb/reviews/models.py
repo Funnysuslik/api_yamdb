@@ -7,6 +7,7 @@ from users.models import User
 
 class Category(models.Model):
     """DB model for categories"""
+
     name = models.CharField(
         max_length=254,
         unique=True,
@@ -26,6 +27,7 @@ class Category(models.Model):
 
 class Genre(models.Model):
     """DB model for genres"""
+
     name = models.CharField(
         max_length=254,
         unique=True,
@@ -48,6 +50,8 @@ def year():
 
 
 class Title(models.Model):
+    """DB model for titles."""
+
     name = models.CharField(
         verbose_name='Название',
         max_length=256
@@ -95,6 +99,7 @@ class Title(models.Model):
 
 class GenreTitle(models.Model):
     """DB model for many to many relation for Genre and Title models"""
+
     genre = models.ForeignKey(
         Genre,
         on_delete=models.CASCADE,
