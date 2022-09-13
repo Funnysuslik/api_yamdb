@@ -4,10 +4,12 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 # from rest_framework.permissions import IsAuthenticated
 # from rest_framework import mixins
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 from reviews.models import Review, Title, Category, Genre
-from users.permissions import IsAuthorOrAdministratorOrReadOnly
+from users.permissions import (
+    IsAuthorOrAdministratorOrReadOnly, IsAdminOrReadOnly)
 from .serializers import (
     CategorySerializer,
     GenreSerializer,
@@ -26,33 +28,47 @@ from .serializers import (
 class CategoryViewSet(viewsets.ModelViewSet):  # (CustomMixin):
     """API для работы с моделью категорий."""
     # pagination_class = LimitOffsetPagination
-    # permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
+
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ('name',)
+
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('slug', 'name')
+
     lookup_field = 'slug'
 
 
 class GenreViewSet(viewsets.ModelViewSet):  # (CustomMixin):
     """API для работы с моделью жанров."""
     # pagination_class = LimitOffsetPagination
-    # permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
+
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ('name',)
+
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('slug', 'name')
+
     lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     """API для работы с моделью произведений."""
     # pagination_class = LimitOffsetPagination
-    # permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     serializer_class = TitleSerializer
     queryset = Title.objects.all()
-    # filter_backends = (DjangoFilterBackend,)
+
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('slug', 'name')
+
     # filterset_class = TitleFilter
+
     ordering_fields = ('name',)
     ordering = ('name',)
 
@@ -75,7 +91,6 @@ class ReviewsViewSet(viewsets.ModelViewSet):
         return title.reviews.all()
 
     def create(self, request, *args, **kwargs):
-        
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -84,7 +99,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
 
         if Review.objects.filter(author=self.request.user, title=self.kwargs.get('title_id')).exists():
-            
+
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
         self.perform_create(serializer)
@@ -94,7 +109,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = Title.objects.get(pk=self.kwargs.get('title_id'))
-        
+
         serializer.save(author=self.request.user, title=title)
 
 
@@ -114,8 +129,8 @@ class CommentsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if not (
-            Title.objects.filter(pk=self.kwargs.get('title_id')).exists() or
-            Review.objects.filter(pk=self.kwargs.get('review_id')).exists()   
+            Title.objects.filter(pk=self.kwargs.get('title_id')).exists()
+            or Review.objects.filter(pk=self.kwargs.get('review_id')).exists()
         ):
 
             return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
