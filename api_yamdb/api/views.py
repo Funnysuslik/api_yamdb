@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 # from rest_framework.permissions import IsAuthenticated
 # from rest_framework import mixins
 
@@ -65,7 +66,7 @@ class ReviewsViewSet(viewsets.ModelViewSet):
     """Viewset for reviews model."""
 
     serializer_class = ReviewSerializer
-    # permission_classes = [IsAuthorOrAdministratorOrReadOnly]
+    permission_classes = [IsAuthorOrAdministratorOrReadOnly]
     # pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -73,15 +74,35 @@ class ReviewsViewSet(viewsets.ModelViewSet):
 
         return title.reviews.all()
 
+    def create(self, request, *args, **kwargs):
+        
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if not Title.objects.filter(pk=self.kwargs.get('title_id')).exists():
+
+            return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+
+        if Review.objects.filter(author=self.request.user, title=self.kwargs.get('title_id')).exists():
+            
+            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        title = Title.objects.get(pk=self.kwargs.get('title_id'))
+        
+        serializer.save(author=self.request.user, title=title)
 
 
 class CommentsViewSet(viewsets.ModelViewSet):
     """Viewset for comments model."""
 
     serializer_class = CommentSerializer
-    # permission_classes = [IsAuthorOrAdministratorOrReadOnly]
+    permission_classes = [IsAuthorOrAdministratorOrReadOnly]
     # pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -89,5 +110,21 @@ class CommentsViewSet(viewsets.ModelViewSet):
 
         return review.comments.all()
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if not (
+            Title.objects.filter(pk=self.kwargs.get('title_id')).exists() or
+            Review.objects.filter(pk=self.kwargs.get('review_id')).exists()   
+        ):
+
+            return Response(serializer.data, status=status.HTTP_404_NOT_FOUND)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        review = Review.objects.get(pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)

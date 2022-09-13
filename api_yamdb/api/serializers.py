@@ -1,6 +1,7 @@
 """Serializers."""
 from django.db.models import Avg
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.relations import SlugRelatedField
 
 from reviews.models import Category, Genre, Title, Comment, Review
@@ -70,3 +71,10 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
+
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=Review.objects.all(),
+        #         fields=['author', 'title']
+        #     )
+        # ]
