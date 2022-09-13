@@ -4,6 +4,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 # from rest_framework.permissions import IsAuthenticated
 # from rest_framework import mixins
+from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
+                                   ListModelMixin)
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -20,12 +22,12 @@ from .serializers import (
 )
 
 
-# class CustomMixin(ListModelMixin, CreateModelMixin, DestroyModelMixin,
-#                   viewsets.GenericViewSet):
-#     pass
+class CustomMixin(ListModelMixin, CreateModelMixin, DestroyModelMixin,
+                  viewsets.GenericViewSet):
+    pass
 
 
-class CategoryViewSet(viewsets.ModelViewSet):  # (CustomMixin):
+class CategoryViewSet(CustomMixin):
     """API для работы с моделью категорий."""
     # pagination_class = LimitOffsetPagination
     permission_classes = (IsAdminOrReadOnly,)
@@ -35,13 +37,13 @@ class CategoryViewSet(viewsets.ModelViewSet):  # (CustomMixin):
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('name',)
 
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('slug', 'name')
+    #filter_backends = (DjangoFilterBackend,)
+    #filterset_fields = ('slug', 'name')
 
     lookup_field = 'slug'
 
 
-class GenreViewSet(viewsets.ModelViewSet):  # (CustomMixin):
+class GenreViewSet(CustomMixin):
     """API для работы с моделью жанров."""
     # pagination_class = LimitOffsetPagination
     permission_classes = (IsAdminOrReadOnly,)
@@ -51,8 +53,8 @@ class GenreViewSet(viewsets.ModelViewSet):  # (CustomMixin):
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('name',)
 
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('slug', 'name')
+    #filter_backends = (DjangoFilterBackend,)
+    #filterset_fields = ('slug', 'name')
 
     lookup_field = 'slug'
 
@@ -64,13 +66,16 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     queryset = Title.objects.all()
 
+    #filter_backends = (DjangoFilterBackend,)
+    #filterset_fields = ('slug', 'name')
+
+    #filterset_class = TitleFilter
+
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('slug', 'name')
+    filterset_fields = ('genre__slug',)
 
-    # filterset_class = TitleFilter
-
-    ordering_fields = ('name',)
-    ordering = ('name',)
+    #ordering_fields = ('name',)
+    #ordering = ('name',)
 
     def get_serializer_class(self):
         if self.action in ('create', 'partial_update'):

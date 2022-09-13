@@ -9,9 +9,11 @@ class Category(models.Model):
     """DB model for categories"""
     name = models.CharField(
         max_length=254,
+        unique=True,
     )
     slug = models.CharField(
-        max_length=50
+        max_length=50,
+        unique=True,
     )
 
     class Meta:
@@ -26,9 +28,11 @@ class Genre(models.Model):
     """DB model for genres"""
     name = models.CharField(
         max_length=254,
+        unique=True,
     )
     slug = models.CharField(
-        max_length=50
+        max_length=50,
+        unique=True,
     )
 
     class Meta:
