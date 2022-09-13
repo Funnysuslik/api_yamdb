@@ -9,7 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import AccessToken
 
 from api_yamdb.settings import DEFAULT_FROM_EMAIL
-from users.permissions import IsAdmin
+from users.permissions import IsAdmin, IsAuthorOrAdministratorOrReadOnly
 from users.serializers import (ForAdminSerializer, ForUserSerializer,
                                TokenSerializer)
 
@@ -84,10 +84,10 @@ class APIUser(APIView):
 
 class UserViewSetForAdmin(ModelViewSet):
     """Работа с пользователями для администратора"""
+    permission_classes = (IsAdmin, )
     queryset = User.objects.all()
     serializer_class = ForAdminSerializer
     # поиск по эндпоинту users/{username}/
     lookup_field = 'username'
-    permission_classes = (IsAdmin, )
     filter_backends = (filters.SearchFilter, )
     search_fields = ('username', )

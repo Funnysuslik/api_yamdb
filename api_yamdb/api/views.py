@@ -53,8 +53,8 @@ class GenreViewSet(CustomMixin):
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('name',)
 
-    #filter_backends = (DjangoFilterBackend,)
-    #filterset_fields = ('slug', 'name')
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('slug', )
 
     lookup_field = 'slug'
 
