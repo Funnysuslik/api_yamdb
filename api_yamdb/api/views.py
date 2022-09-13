@@ -1,18 +1,17 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, filters
+from rest_framework import filters, viewsets
 from rest_framework.pagination import LimitOffsetPagination
+from reviews.models import Review, Title
+from users.permissions import IsAuthorOrAdministratorOrReadOnly
+
+from .serializers import (CategoriesSerializer, CommentsSerializer,
+                          ReviewsSerializer)
+
 # from rest_framework.permissions import IsAuthenticated
 # from rest_framework.pagination import LimitOffsetPagination
 # from rest_framework import mixins
 
 
-from reviews.models import Review, Title
-from users.permissions import IsAuthorOrAdministratorOrReadOnly
-from .serializers import (
-    CategoriesSerializer,
-    CommentsSerializer,
-    ReviewsSerializer,
-)
 
 
 class CategoriesViewSet(viewsets.ModelViewSet):
