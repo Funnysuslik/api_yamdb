@@ -113,14 +113,14 @@ class Review(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='reviews'
+        related_name='reviews',
     )
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
         related_name='reviews',
-        blank=True,
-        null=True
+        null=True,
+        blank=True
     )
     text = models.TextField()
     score = models.PositiveSmallIntegerField(

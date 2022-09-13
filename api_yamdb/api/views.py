@@ -93,8 +93,9 @@ class ReviewsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
+        title = Title.objects.get(pk=self.kwargs.get('title_id'))
         
-        serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user, title=title)
 
 
 class CommentsViewSet(viewsets.ModelViewSet):
@@ -125,4 +126,5 @@ class CommentsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        review = Review.objects.get(pk=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)
