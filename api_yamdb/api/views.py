@@ -1,17 +1,58 @@
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, mixins, viewsets
 from rest_framework.pagination import LimitOffsetPagination
-from reviews.models import Review, Title
-from users.permissions import IsAuthorOrAdministratorOrReadOnly
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
+from reviews.models import Category, Genre, Review, Title
+from users.permissions import (IsAdminOrReadOnly,
+                               IsAuthorOrAdministratorOrReadOnly)
 
-from .serializers import (CategoriesSerializer, CommentsSerializer,
-                          ReviewsSerializer)
+from .filters import TitleFilter
+from .serializers import (CategoriesSerializer, CategorySerializer,
+                          CommentsSerializer, GenreSerializer,
+                          ReviewsSerializer, TitleCreateSerializer,
+                          TitleSerializer)
 
-# from rest_framework.permissions import IsAuthenticated
 # from rest_framework.pagination import LimitOffsetPagination
 # from rest_framework import mixins
 
 
+class GenCatMix(mixins.ListModelMixin, mixins.CreateModelMixin,
+                mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', )
+    lookup_field = 'slug'
+    pagination_class = (LimitOffsetPagination,)
+
+
+class GenreViewSet(GenCatMix):
+    """ Получить список жанров может любой пользователь.
+    Добавление и удаление жанра доступно только админу."""
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class CategoryViewSet(GenCatMix):
+    """ Получить список категорий может любой пользователь.
+    Добавление и удаление категорий доступно только админу."""
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAdminOrReadOnly,)
+    paginathion_class = (LimitOffsetPagination,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TitleFilter
+
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve',):
+            return TitleSerializer
+        return TitleCreateSerializer
 
 
 class CategoriesViewSet(viewsets.ModelViewSet):

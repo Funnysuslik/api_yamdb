@@ -1,8 +1,6 @@
 """Serializers."""
-# from django.db.models import Avg
 from rest_framework import serializers
-
-from reviews.models import Category, Comment, Review, Genre, Title
+from reviews.models import Category, Comment, Genre, Review, Title
 
 
 class CommentsSerializer(serializers.ModelSerializer):
@@ -34,7 +32,7 @@ class CategoriesSerializer(serializers.ModelSerializer):
         fields = ('text', 'score')
         model = Category
 
-"""
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -49,7 +47,7 @@ class GenreSerializer(serializers.ModelSerializer):
         lookup_field = "slug"
 
 
-class TitleGetSerializer(serializers.ModelSerializer):
+class TitleSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(read_only=True, many=True)
     rating = serializers.IntegerField(read_only=True)
@@ -59,7 +57,7 @@ class TitleGetSerializer(serializers.ModelSerializer):
         exclude = ("id", )
 
 
-class TitlePostSerializer(serializers.ModelSerializer):
+class TitleCreateSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(queryset=Category.objects.all(),
                                             slug_field='slug'
                                             )
@@ -70,4 +68,3 @@ class TitlePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         exclude = ("id", )
-"""
