@@ -118,7 +118,9 @@ class Review(models.Model):
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
-        related_name='reviews'
+        related_name='reviews',
+        blank=True,
+        null=True
     )
     text = models.TextField()
     score = models.PositiveSmallIntegerField(
@@ -153,7 +155,9 @@ class Comment(models.Model):
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
-        related_name='comments'
+        related_name='comments',
+        null=True,
+        blank=True
     )
     text = models.TextField()
     pub_date = models.DateTimeField(
