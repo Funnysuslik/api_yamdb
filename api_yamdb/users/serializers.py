@@ -7,12 +7,11 @@ from api_yamdb.settings import (MESSAGE_FOR_RESERVED_NAME,
 
 from .models import User
 
-# когда взлетит эти два сериалайзера объединю
-
 
 class ForUserSerializer(serializers.ModelSerializer):
     """Сериализатор для пользователей со статусом user.
     Зарезервированное имя использовать нельзя"""
+
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
@@ -33,6 +32,7 @@ class ForUserSerializer(serializers.ModelSerializer):
 class ForAdminSerializer(serializers.ModelSerializer):
     """Сериализатор для пользователей со статусом admin.
     Зарезервированное имя использовать нельзя"""
+
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())])
 
@@ -50,12 +50,18 @@ class ForAdminSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.Serializer):
     """Сериализатор для получения токена.
     Зарезервированное имя использовать нельзя."""
+
     username = serializers.CharField(max_length=50, required=True)
     confirmation_code = serializers.CharField(max_length=50, required=True)
 
     def validate_username(self, value):
+
         if value == RESERVED_NAME:
+
             raise serializers.ValidationError(MESSAGE_FOR_RESERVED_NAME)
+
         if not User.objects.filter(username=value).exists():
+
             raise exceptions.NotFound(MESSAGE_FOR_USER_NOT_FOUND)
+
         return value
