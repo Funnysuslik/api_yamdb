@@ -2,10 +2,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
+from .helpers import year
 from users.models import User
-
-MODELS_STR_MAX_LENGTH = 10
-CURRENT_YEAR = timezone.now().year
 
 
 class Category(models.Model):
@@ -25,7 +23,7 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return self.name[:MODELS_STR_MAX_LENGTH]
+        return self.name[:10]
 
 
 class Genre(models.Model):
@@ -45,11 +43,7 @@ class Genre(models.Model):
         verbose_name_plural = 'Жанры'
 
     def __str__(self):
-        return self.name[:MODELS_STR_MAX_LENGTH]
-
-
-def year(): 
-    return timezone.now().year 
+        return self.name[:10]
 
 
 class Title(models.Model):
@@ -63,10 +57,14 @@ class Title(models.Model):
         verbose_name='Год выпуска',
         validators=[
             MaxValueValidator(
-                year,
-                'Значение не должно быть больше текущей даты!'
+                year, 'Значение не должно быть больше текущей даты!'
             )
         ]
+    )
+    rating = models.IntegerField(
+        verbose_name='Рейтинг на основе отзывов',
+        null=True,
+        default=None
     )
     description = models.TextField(
         verbose_name='Описание',
@@ -93,7 +91,7 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
 
     def __str__(self):
-        return self.name[:MODELS_STR_MAX_LENGTH]
+        return self.name[:10]
 
 
 class GenreTitle(models.Model):
@@ -151,7 +149,7 @@ class Review(models.Model):
         verbose_name_plural = "Reviews"
 
     def __str__(self):
-        return self.text[:MODELS_STR_MAX_LENGTH]
+        return self.text[:10]
 
 
 class Comment(models.Model):
@@ -181,4 +179,4 @@ class Comment(models.Model):
         verbose_name_plural = "Comments"
 
     def __str__(self):
-        return self.text[:MODELS_STR_MAX_LENGTH]
+        return self.text[:10]
