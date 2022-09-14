@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, status
@@ -55,7 +56,9 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = TitleSerializer
-    queryset = Title.objects.all()
+    queryset = Title.objects.all().annotate(
+        rating=Avg('reviews__score')
+    )
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     filterset_fields = ('genre__slug',)
