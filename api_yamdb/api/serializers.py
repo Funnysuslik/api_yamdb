@@ -54,7 +54,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = ('id', 'name', 'year', 'description',
-                  'genre', 'category', 'rating')
+                  'genre', 'category')
 
 
 class CommentSerializer(serializers.ModelSerializer):
