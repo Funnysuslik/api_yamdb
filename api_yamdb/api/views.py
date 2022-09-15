@@ -107,7 +107,6 @@ class UserViewSet(ModelViewSet):
         detail=False,
         permission_classes=(IsAuthenticated,),
         url_path='me')
-
     def get_current_user_info(self, request):
         serializer = ForUserSerializer(request.user)
 
