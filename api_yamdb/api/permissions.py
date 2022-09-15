@@ -13,7 +13,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 class IsAdmin(permissions.BasePermission):
     """Permission for admin only."""
-    
+
     def has_permission(self, request, view):
 
         return (request.user.is_authenticated
