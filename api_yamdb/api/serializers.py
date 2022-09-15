@@ -20,7 +20,7 @@ class ForUserSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-      
+
         model = User
         fields = (
             'id', 'username', 'email', 'first_name', 'last_name', 'bio', 'role'
@@ -29,9 +29,9 @@ class ForUserSerializer(serializers.ModelSerializer):
 
     def validate_username(self, value):
         if value == RESERVED_NAME:
-          
+
             raise serializers.ValidationError(MESSAGE_FOR_RESERVED_NAME)
-            
+
         return value
 
 
@@ -43,16 +43,16 @@ class ForAdminSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())])
 
     class Meta:
-      
+
         model = User
         fields = (
             'username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
     def validate_username(self, value):
         if value == RESERVED_NAME:
-          
+
             raise serializers.ValidationError(MESSAGE_FOR_RESERVED_NAME)
-            
+
         return value
 
 
@@ -78,31 +78,31 @@ class TokenSerializer(serializers.Serializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     """Serializer for Category model."""
-  
+
     class Meta:
-      
+
         model = Category
         fields = ('name', 'slug')
 
 
 class GenreSerializer(serializers.ModelSerializer):
    """Serializer for Genre model."""
-  
+
     class Meta:
-      
+
         model = Genre
         fields = ('name', 'slug')
 
 
 class TitleSerializer(serializers.ModelSerializer):
     """ Serializer for Title model."""
-  
+
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
-    rating = serializers.SerializerMethodField()  # это откатил
+    rating = serializers.SerializerMethodField()
 
     class Meta:
-      
+
         model = Title
         fields = ('id', 'name', 'year', 'rating', 'description',
                   'genre', 'category',)
@@ -110,17 +110,17 @@ class TitleSerializer(serializers.ModelSerializer):
     def get_rating(self, obj):
         try:
             rating = obj.reviews.aggregate(Avg('score'))
-            
+
             return rating.get('score__avg')
-          
+
         except TypeError:
-          
+
             return None
 
 
 class TitleCreateSerializer(serializers.ModelSerializer):
     """Serializer for POST and PATCH methods for Title model."""
-    
+
     category = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Category.objects.all()
@@ -132,7 +132,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-      
+
         model = Title
         fields = ('id', 'name', 'year', 'description',
                   'genre', 'category')
@@ -140,21 +140,21 @@ class TitleCreateSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     """Serializer for Comment model."""
-    
+
     author = SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
-      
+
         model = Comment
         fields = ('id', 'text', 'author', 'pub_date')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     """Serializer for Review model."""
-    
+
     author = SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
-      
+
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
