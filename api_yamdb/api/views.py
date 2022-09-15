@@ -38,7 +38,6 @@ from users.models import User
 from reviews.models import Review, Title, Category, Genre
 
 
-
 class APISignUp(APIView):
     """User auth."""
 
