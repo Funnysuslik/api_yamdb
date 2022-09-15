@@ -6,8 +6,11 @@ from .helpers import year
 from users.models import User
 
 
+MODELS_STR_MAX_LENGTH = 10
+
+
 class Category(models.Model):
-    """DB model for categories"""
+    """DB model for categories."""
 
     name = models.CharField(
         max_length=254,
@@ -19,15 +22,16 @@ class Category(models.Model):
     )
 
     class Meta:
+        
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return self.name[:10]
+        return self.name[:MODELS_STR_MAX_LENGTH]
 
 
 class Genre(models.Model):
-    """DB model for genres"""
+    """DB model for genres."""
 
     name = models.CharField(
         max_length=254,
@@ -39,11 +43,12 @@ class Genre(models.Model):
     )
 
     class Meta:
+        
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
 
     def __str__(self):
-        return self.name[:10]
+        return self.name[:MODELS_STR_MAX_LENGTH]
 
 
 class Title(models.Model):
@@ -87,15 +92,16 @@ class Title(models.Model):
     )
 
     class Meta:
+        
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
 
     def __str__(self):
-        return self.name[:10]
+        return self.name[:MODELS_STR_MAX_LENGTH]
 
 
 class GenreTitle(models.Model):
-    """DB model for many to many relation for Genre and Title models"""
+    """DB model for many to many relation for Genre and Title models."""
 
     genre = models.ForeignKey(
         Genre,
@@ -109,6 +115,7 @@ class GenreTitle(models.Model):
     )
 
     class Meta:
+        
         verbose_name = 'ganretitle'
         verbose_name_plural = 'ganretitles'
 
@@ -142,14 +149,14 @@ class Review(models.Model):
     )
 
     class Meta:
+        
         constraints = (models.UniqueConstraint(fields=('author', 'title'),
                                                name='unique_review'),)
-
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
 
     def __str__(self):
-        return self.text[:10]
+        return self.text[:MODELS_STR_MAX_LENGTH]
 
 
 class Comment(models.Model):
@@ -179,4 +186,4 @@ class Comment(models.Model):
         verbose_name_plural = "Comments"
 
     def __str__(self):
-        return self.text[:10]
+        return self.text[:MODELS_STR_MAX_LENGTH]
