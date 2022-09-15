@@ -4,11 +4,12 @@ from rest_framework import exceptions, serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueValidator
 
-from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import User
+
 from api_yamdb.settings import (MESSAGE_FOR_RESERVED_NAME,
                                 MESSAGE_FOR_USER_NOT_FOUND,
                                 RESERVED_NAME)
+from reviews.models import Category, Comment, Genre, Review, Title
+from users.models import User
 
 
 class ForUserSerializer(serializers.ModelSerializer):
@@ -99,7 +100,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
-    rating = serializers.SerializerMethodField()
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
 

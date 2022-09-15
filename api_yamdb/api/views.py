@@ -1,6 +1,7 @@
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from django.db.models import Avg
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, status
 from rest_framework.mixins import (
@@ -167,7 +168,9 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = TitleSerializer
-    queryset = Title.objects.all()
+    queryset = Title.objects.all().annotate(
+        rating=Avg('reviews__score')
+    )
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     filterset_fields = ('genre__slug',)
