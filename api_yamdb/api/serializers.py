@@ -1,5 +1,4 @@
 """Serializers."""
-from django.db.models import Avg
 from rest_framework import exceptions, serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueValidator
