@@ -2,6 +2,7 @@ from rest_framework import permissions
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
+    """Permission for admin and GET method only."""
 
     def has_permission(self, request, view):
 
@@ -11,7 +12,8 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 
 class IsAdmin(permissions.BasePermission):
-
+    """Permission for admin only."""
+    
     def has_permission(self, request, view):
 
         return (request.user.is_authenticated
@@ -19,6 +21,7 @@ class IsAdmin(permissions.BasePermission):
 
 
 class IsAuthorOrAdministratorOrReadOnly(permissions.BasePermission):
+    """Permission for author or admin or GET method only."""
 
     def has_permission(self, request, view):
 
