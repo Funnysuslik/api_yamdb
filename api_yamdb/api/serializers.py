@@ -86,7 +86,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
-   """Serializer for Genre model."""
+    """Serializer for Genre model."""
 
     class Meta:
 
