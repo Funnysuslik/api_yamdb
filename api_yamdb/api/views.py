@@ -4,8 +4,11 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, status
-from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
-                                   ListModelMixin)
+from rest_framework.mixins import (
+    CreateModelMixin,
+    DestroyModelMixin,
+    ListModelMixin
+)
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -14,12 +17,18 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.decorators import action
 
-from .serializers import (ForAdminSerializer, ForUserSerializer,
-                          TokenSerializer)
+from .serializers import (
+    ForAdminSerializer,
+    ForUserSerializer,
+    TokenSerializer
+)
 from users.models import User
 from reviews.models import Review, Title, Category, Genre
 from .permissions import (
-    IsAdmin, IsAuthorOrAdministratorOrReadOnly, IsAdminOrReadOnly)
+    IsAdmin,
+    IsAuthorOrAdministratorOrReadOnly,
+    IsAdminOrReadOnly
+)
 from .filters import TitleFilter
 from .serializers import (
     CategorySerializer,
@@ -32,7 +41,7 @@ from .serializers import (
 
 
 class APISignUp(APIView):
-    """User auth"""
+    """User auth."""
 
     permission_classes = (AllowAny, )
 
@@ -43,6 +52,7 @@ class APISignUp(APIView):
             serializer.save()
             self.create_confirmation_code_and_send_email(
                 serializer.data['username'])
+            
             return Response(
                 {'email': serializer.data['email'],
                  'username': serializer.data['username']},
@@ -60,7 +70,7 @@ class APISignUp(APIView):
 
 
 class APIToken(APIView):
-    """Get token"""
+    """Get token."""
 
     permission_classes = (AllowAny, )
 
@@ -70,18 +80,22 @@ class APIToken(APIView):
         if serializer.is_valid(raise_exception=True):
             user = get_object_or_404(
                 User, username=serializer.data['username'])
+            
             if default_token_generator.check_token(
                     user, serializer.data['confirmation_code']):
                 token = AccessToken.for_user(user)
+                
                 return Response(
                     {'token': str(token)}, status=status.HTTP_200_OK)
+              
             return Response({
                 'confirmation code': 'Некорректный код подтверждения!'},
                 status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(ModelViewSet):
-    """Работа с пользователями"""
+    """Работа с пользователями."""
+
     permission_classes = (IsAdmin, )
     queryset = User.objects.all()
     serializer_class = ForAdminSerializer
@@ -94,14 +108,18 @@ class UserViewSet(ModelViewSet):
         detail=False,
         permission_classes=(IsAuthenticated,),
         url_path='me')
+    
     def get_current_user_info(self, request):
         serializer = ForUserSerializer(request.user)
+        
         if request.method == 'PATCH':
+          
             if request.user.is_admin:
                 serializer = ForAdminSerializer(
                     request.user,
                     data=request.data,
                     partial=True)
+                
             else:
                 serializer = ForUserSerializer(
                     request.user,
@@ -109,14 +127,18 @@ class UserViewSet(ModelViewSet):
                     partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
+            
             return Response(serializer.data, status=status.HTTP_200_OK)
+          
         return Response(serializer.data)
 
 
-# Users end
-
-class CustomMixin(ListModelMixin, CreateModelMixin, DestroyModelMixin,
+class CustomMixin(ListModelMixin,
+                  CreateModelMixin,
+                  DestroyModelMixin,
                   viewsets.GenericViewSet):
+    """Prebuild ViewSet for GET, POST and DEL methods."""
+    
     pass
 
 
@@ -175,7 +197,6 @@ class ReviewsViewSet(viewsets.ModelViewSet):
         return title.reviews.all()
 
     def create(self, request, *args, **kwargs):
-
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -238,6 +259,5 @@ class CommentsViewSet(viewsets.ModelViewSet):
         )
 
     def perform_create(self, serializer):
-        title = Title.objects.get(pk=self.kwargs.get('title_id'))
-        review = title.reviews.get(pk=self.kwargs.get('review_id'))
+        review = get_object_or_404(Review, id=self.kwargs.get("review_id"), title__id=self.kwargs.get("title_id"))
         serializer.save(author=self.request.user, review=review)
