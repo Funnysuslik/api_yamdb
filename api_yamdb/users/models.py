@@ -10,28 +10,28 @@ class MyUserManager(UserManager):
     Зарезервированное имя использовать нельзя."""
 
     def create_user(self, username, email, password, **extra_fields):
-      
+
         if not email:
-          
+
             raise ValueError('Поле email обязательное')
-            
+
         if username == RESERVED_NAME:
-          
+
             raise ValueError(MESSAGE_FOR_RESERVED_NAME)
-            
+
         return super().create_user(
             username, email, password, **extra_fields)
 
     def create_superuser(
             self, username, email, password, role='admin', **extra_fields):
-      
+
         return super().create_superuser(
             username, email, password, role='admin', **extra_fields)
 
 
 class User(AbstractUser):
     """Our custom user model."""
-    
+
     USER = 'user'
     MODER = 'moderator'
     ADMIN = 'admin'
@@ -48,7 +48,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ('email', 'password')
 
     class Meta:
-      
+
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
