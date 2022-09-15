@@ -16,11 +16,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.decorators import action
 
-from .serializers import (
-    ForAdminSerializer,
-    ForUserSerializer,
-    TokenSerializer
-)
 from users.models import User
 from reviews.models import Review, Title, Category, Genre
 from .permissions import (
@@ -31,11 +26,14 @@ from .permissions import (
 from .filters import TitleFilter
 from .serializers import (
     CategorySerializer,
-    GenreSerializer,
-    TitleSerializer,
-    TitleCreateSerializer,
     CommentSerializer,
+    ForAdminSerializer,
+    ForUserSerializer,
+    GenreSerializer,
     ReviewSerializer,
+    TitleCreateSerializer,
+    TitleSerializer,
+    TokenSerializer
 )
 
 
@@ -259,7 +257,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review = get_object_or_404(
             Review,
-            id=self.kwargs.get("review_id"),
-            title__id=self.kwargs.get("title_id")
+            id=self.kwargs.get('review_id'),
+            title__id=self.kwargs.get('title_id')
         )
         serializer.save(author=self.request.user, review=review)
