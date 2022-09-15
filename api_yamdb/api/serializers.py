@@ -108,16 +108,6 @@ class TitleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'year', 'rating', 'description',
                   'genre', 'category',)
 
-    def get_rating(self, obj):
-        try:
-            rating = obj.reviews.aggregate(Avg('score'))
-
-            return rating.get('score__avg')
-
-        except TypeError:
-
-            return None
-
 
 class TitleCreateSerializer(serializers.ModelSerializer):
     """Serializer for POST and PATCH methods for Title model."""
