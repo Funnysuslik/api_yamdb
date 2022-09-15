@@ -9,22 +9,20 @@ from rest_framework.mixins import (
     DestroyModelMixin,
     ListModelMixin
 )
-from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.decorators import action
 
-from users.models import User
-from reviews.models import Review, Title, Category, Genre
+from .filters import TitleFilter
 from .permissions import (
     IsAdmin,
-    IsAuthorOrAdministratorOrReadOnly,
-    IsAdminOrReadOnly
+    IsAdminOrReadOnly,
+    IsAuthorOrAdministratorOrReadOnly
 )
-from .filters import TitleFilter
 from .serializers import (
     CategorySerializer,
     CommentSerializer,
@@ -36,6 +34,9 @@ from .serializers import (
     TitleSerializer,
     TokenSerializer
 )
+from users.models import User
+from reviews.models import Review, Title, Category, Genre
+
 
 
 class APISignUp(APIView):
